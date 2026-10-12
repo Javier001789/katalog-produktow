@@ -1,6 +1,5 @@
 ﻿using System.Text;
 using System.Windows;
-using System.Globalization;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
@@ -20,42 +19,43 @@ namespace KatalogProduktow
         public MainWindow()
         {
             InitializeComponent();
+            KategorieComboBox.ItemsSource = new string[] { "Elektronika", "Odzież", "Książki", "Meble"};
+            KategorieComboBox.SelectedIndex = 0;
         }
 
-        private void ObliczButton_Click(object sender, RoutedEventArgs e)
+        private void Oblicz(object sender, RoutedEventArgs e)
         {
-            // Sprawdzenie ceny
             if (!double.TryParse(CenaTextBox.Text, out double cena))
             {
-                WynikTextBlock.Text = "Błąd: cena musi być liczbą.";
+                WynikTextBlock.Text = "Niepoprawna wartość ceny";
                 return;
             }
 
-            // Sprawdzenie ilości
             if (!int.TryParse(IloscTextBox.Text, out int ilosc))
             {
-                WynikTextBlock.Text = "Błąd: ilość musi być liczbą całkowitą.";
+                WynikTextBlock.Text = "Niepoprawna wartość ilości";
                 return;
             }
 
-            // Sprawdzenie wartości ujemnych
             if (cena < 0 || ilosc < 0)
             {
-                WynikTextBlock.Text = "Błąd: cena i ilość nie mogą być ujemne.";
+                WynikTextBlock.Text = "Cena i ilość nie mogą być ujemne";
                 return;
             }
 
-            // Obliczenie wartości
-            double wartosc = cena * ilosc;
+            double wartoscZamowienia = cena * ilosc;
 
-            // Wynik
-            WynikTextBlock.Text = $"Wartość: {wartosc:C}";
-        }
+            if (PromocjaCheckBox.IsChecked == true)
+            {
+                wartoscZamowienia *= 0.9;
+            }
 
-
-        private void CenaTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
+            WynikTextBlock.Text =
+                $"Nazwa produktu: {NazwaTextBox.Text}\n" +
+                $"Kategoria: {KategorieComboBox.Text}\n" +
+                $"Cena: {cena:F2} zł\n" +
+                $"Ilość: {ilosc}\n" +
+                $"Wartość zamówienia: {wartoscZamowienia:F2} zł";
         }
     }
 }
