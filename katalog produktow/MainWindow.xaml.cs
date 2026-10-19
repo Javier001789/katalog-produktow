@@ -9,53 +9,50 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace KatalogProduktow
+namespace katalogproduktow
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
+        List<Produkt> produkty = new List<Produkt>();
         public MainWindow()
         {
             InitializeComponent();
-            KategorieComboBox.ItemsSource = new string[] { "Elektronika", "Odzież", "Książki", "Meble"};
+            KategorieComboBox.ItemsSource = new string[] { "Elektronika", "Odzież", "Książki", "Meble" };
             KategorieComboBox.SelectedIndex = 0;
+            produkty.Add(new Produkt { Nazwa = "Laptop", Cena = 3500, Ilosc = 5, Kategoria = "Elektronika" });
+            produkty.Add(new Produkt { Nazwa = "Koszula", Cena = 120, Ilosc = 10, Kategoria = "Odzież" });
+            ListaProduktow.ItemsSource = produkty;
         }
 
         private void Oblicz(object sender, RoutedEventArgs e)
         {
-            if (!double.TryParse(CenaTextBox.Text, out double cena))
+            // || cena < 0 — TryParse przepuści -5, więc ujemne trzeba odrzucić osobno
+            if (!double.TryParse(CenaTextBox.Text, out double cena) || cena < 0)
             {
                 WynikTextBlock.Text = "Niepoprawna wartość ceny";
                 return;
             }
-
-            if (!int.TryParse(IloscTextBox.Text, out int ilosc))
+            if (!int.TryParse(IloscTextBox.Text, out int ilosc) || ilosc < 0)
             {
                 WynikTextBlock.Text = "Niepoprawna wartość ilości";
                 return;
             }
 
-            if (cena < 0 || ilosc < 0)
-            {
-                WynikTextBlock.Text = "Cena i ilość nie mogą być ujemne";
-                return;
-            }
+            // ItemsSource to tablica string, więc SelectedItem jest stringiem (albo null)
+            string kategoria = KategorieComboBox.SelectedItem as string ?? "brak kategorii";
 
             double wartoscZamowienia = cena * ilosc;
-
+            // IsChecked jest typu bool? (trzy stany), stąd porównanie z true
             if (PromocjaCheckBox.IsChecked == true)
             {
-                wartoscZamowienia *= 0.9;
+                wartoscZamowienia *= 0.9;   // promocja -10%
             }
 
-            WynikTextBlock.Text =
-                $"Nazwa produktu: {NazwaTextBox.Text}\n" +
-                $"Kategoria: {KategorieComboBox.Text}\n" +
-                $"Cena: {cena:F2} zł\n" +
-                $"Ilość: {ilosc}\n" +
-                $"Wartość zamówienia: {wartoscZamowienia:F2} zł";
+            // F2 = dwa miejsca po przecinku, separator zgodny z ustawieniami systemu
+            WynikTextBlock.Text = $"{NazwaTextBox.Text} ({kategoria}): {wartoscZamowienia:F2} zł";
         }
     }
 }
