@@ -23,6 +23,7 @@ namespace katalogproduktow
         public ObservableCollection<Produkt> produkty { get; set; } = new ObservableCollection<Produkt>();
         public MainWindow()
         {
+
             InitializeComponent();
             KategorieComboBox.ItemsSource = new string[] { "Elektronika", "Odzież", "Książki", "Meble" };
             KategorieComboBox.SelectedIndex = 0;
