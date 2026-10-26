@@ -1,5 +1,4 @@
-﻿using katalogproduktow;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,7 +10,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace katalogproduktow
+namespace KatalogProduktow
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -23,7 +22,6 @@ namespace katalogproduktow
         public ObservableCollection<Produkt> produkty { get; set; } = new ObservableCollection<Produkt>();
         public MainWindow()
         {
-
             InitializeComponent();
             KategorieComboBox.ItemsSource = new string[] { "Elektronika", "Odzież", "Książki", "Meble" };
             KategorieComboBox.SelectedIndex = 0;
@@ -67,13 +65,30 @@ namespace katalogproduktow
 
         private void DodajProdukt(object sender, RoutedEventArgs e)
         {
-            string nazwa = NazwaTextBox.Text;
-            double cena = double.Parse(CenaTextBox.Text);
-            int ilosc = int.Parse(IloscTextBox.Text);
-            string kategoria = KategorieComboBox.SelectedItem as string ?? "brak kategorii";
+            if (string.IsNullOrWhiteSpace(NazwaTextBox.Text))
+            {
+                MessageBox.Show("Podaj nazwę produktu.");
+                return;
+            }
+            if (!double.TryParse(CenaTextBox.Text, out double cena) || cena < 0)
+            {
+                MessageBox.Show("Niepoprawna wartość ceny.");
+                return;
+            }
+            if (!int.TryParse(IloscTextBox.Text, out int ilosc) || ilosc < 0)
+            {
+                MessageBox.Show("Niepoprawna wartość ilości.");
+                return;
+            }
 
-            produkty.Add(new Produkt { Nazwa = nazwa, Cena = cena, Ilosc = ilosc, Kategoria = kategoria });
-
+            produkty.Add(new Produkt
+            {
+                Nazwa = NazwaTextBox.Text,
+                Cena = cena,
+                Ilosc = ilosc,
+                Kategoria = KategorieComboBox.SelectedItem as string ?? "brak kategorii",
+                Promocja = PromocjaCheckBox.IsChecked == true
+            });
         }
 
         private void UsunProdukt(object sender, RoutedEventArgs e)

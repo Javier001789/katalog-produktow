@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace katalogproduktow
+namespace KatalogProduktow
 {
     public class Produkt
     {
@@ -17,6 +17,10 @@ namespace katalogproduktow
         }
         public int Ilosc { get; set; }
         public string Kategoria { get; set; } = "";
+
+        public double WartoscMagazynu => Cena * Ilosc;
+
+        public bool Promocja { get; set; }
         //nadpisujemy domyślną metodę ToString, aby zwracała czytelny opis produktu
         //public override string ToString()
         //{
