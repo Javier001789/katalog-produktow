@@ -7,23 +7,47 @@ namespace KatalogProduktow
 {
     public class Produkt : INotifyPropertyChanged
     {
-        public string Nazwa { get; set; } = "";
+        private string nazwa = "";
+        public string Nazwa
+        {
+            get { return nazwa; }
+            set { nazwa = value; Zmiana(nameof(Nazwa)); }
+        }
+
         private double cena;
         public double Cena
         {
-            
             get { return cena; }
-            
-            set { cena = value < 0 ? 0 : value; Zmiana(nameof(Cena)); }
+            set
+            {
+                cena = value < 0 ? 0 : value;
+                Zmiana(nameof(Cena));
+                Zmiana(nameof(Wartosc));
+            }
         }
+
         private int ilosc;
         public int Ilosc
         {
             get { return ilosc; }
-            set { ilosc = value < 0 ? 0 : value; Zmiana(nameof(Ilosc)); }
+            set
+            {
+                ilosc = value < 0 ? 0 : value;
+                Zmiana(nameof(Ilosc));
+                Zmiana(nameof(Wartosc));
+            }
         }
-        public string Kategoria { get; set; } = "";
-        
+
+        private string kategoria = "";
+        public string Kategoria
+        {
+            get { return kategoria; }
+            set { kategoria = value; Zmiana(nameof(Kategoria)); }
+        }
+
+        // wartość produktów na stanie
+        public double Wartosc => Cena * Ilosc;
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         private void Zmiana(string nazwaWlasciwosci)
