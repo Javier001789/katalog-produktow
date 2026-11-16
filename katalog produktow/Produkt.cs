@@ -8,6 +8,7 @@ namespace KatalogProduktow
     {
         public string Nazwa { get; set; } = "";
         private double cena;
+
         public double Cena
         {
             //jeśli ktoś chce odczytać cenę, zwracamy jej wartość
